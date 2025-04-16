@@ -8,7 +8,7 @@ preklad: swipl -q -g start -o flp19-log -c input2.pl
 
 
 
-:- module(input2, [start_load_input/0]).
+:- module(input2, [start_load_input/1]).
 
 
 
@@ -45,12 +45,12 @@ split_lines([],[]).
 split_lines([L|Ls],[H|T]) :- split_lines(Ls,T), split_line(L,H).
 
 
-start_load_input :-
+start_load_input(Result) :-
 		prompt(_, ''),
 		read_lines(LL),
-		split_lines(LL,S),
-		write(S),
-		halt.
+		split_lines(LL, Result).%,
+		%write(Result),
+		%halt.
 
 
 /** nacte zadany pocet radku */
