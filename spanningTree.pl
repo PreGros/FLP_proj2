@@ -45,67 +45,26 @@ getLenSubbags(EDGES, LEN, SpanTreeCandidates) :-
     filterLenArray(Subbags, LEN, SpanTreeCandidates).
 /* --------------------------- */
 
+/* Lepší způsob generování kombinací o určité velikosti */
+
+noRepeatCombination(0, _, []) :- !.
+noRepeatCombination(NUM, [H|T], [H|RES]) :-
+    NUM > 0,
+    DECNUM is NUM - 1,
+    noRepeatCombination(DECNUM, T, RES).
+noRepeatCombination(NUM, [_|T], RES) :-
+    noRepeatCombination(NUM, T, RES).
+
+/* ---------------------------*/
+
 
 
 main :-
     start_load_input(EDGES),
-    uniqueArray(EDGES, ARRAY),
-    length(ARRAY, LEN),
-    EDGECOUNT is LEN - 1,
-    getLenSubbags(EDGES, EDGECOUNT, LENSUBBAGS),
-    write(LENSUBBAGS),
+    uniqueArray(EDGES, UARRAY),
+    length(UARRAY, LEN),
+    SPANEDGECOUNT is LEN - 1,
+    %getLenSubbags(EDGES, SPANEDGECOUNT, LENSUBBAGS),
+    findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), Kombinace),
+    write(Kombinace),
     halt.
-
-
-[
-    [1
-        [[A],[D]],
-        [[B],[C]],
-        [[C],[D]]
-    ],
-    [2
-        [[A],[C]],
-        [[B],[C]],
-        [[C],[D]]
-    ],
-    [3
-        [[A],[C]],
-        [[A],[D]],
-        [[C],[D]]
-    ],
-    [4
-        [[A],[C]],
-        [[A],[D]],
-        [[B],[C]]
-    ],
-    [5
-        [[A],[B]],
-        [[B],[C]],
-        [[C],[D]]
-    ],
-    [6
-        [[A],[B]],
-        [[A],[D]],
-        [[C],[D]]
-    ],
-    [7
-        [[A],[B]],
-        [[A],[D]],
-        [[B],[C]]
-    ],
-    [8
-        [[A],[B]],
-        [[A],[C]],
-        [[C],[D]]
-    ],
-    [9
-        [[A],[B]],
-        [[A],[C]],
-        [[B],[C]]
-    ],
-    [10
-        [[A],[B]],
-        [[A],[C]],
-        [[A],[D]]
-    ]
-]
