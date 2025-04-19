@@ -16,7 +16,7 @@ preklad: swipl -q -g start -o flp19-log -c input2.pl
 read_line(L,C) :-
 	get_char(C),
 	(isEOFEOL(C), L = [], !;
-		read_line(LL,_),							% atom_codes(C,[Cd]),
+		read_line(LL,_),
 		[C|LL] = L).
 
 
@@ -34,11 +34,11 @@ read_lines(Ls) :-
 
 
 /** rozdeli radek na podseznamy */
-split_line([],[[]]) :- !.
-split_line([' '|T], [[]|S1]) :- !, split_line(T,S1).
-split_line([32|T], [[]|S1]) :- !, split_line(T,S1).    % aby to fungovalo i s retezcem na miste seznamu
-split_line([H|T], [[H|G]|S1]) :- split_line(T,[G|S1]). % G je prvni seznam ze seznamu seznamu G|S1
-
+/* Upraveno pro potřebu projektu */
+split_line([],[]) :- !.
+split_line([' '|T], S1) :- !, split_line(T,S1).
+split_line([32|T], S1) :- !, split_line(T,S1).    % aby to fungovalo i s retezcem na miste seznamu
+split_line([H|T], [H|S1]) :- split_line(T,S1). % G je prvni seznam ze seznamu seznamu G|S1
 
 /** vstupem je seznam radku (kazdy radek je seznam znaku) */
 split_lines([],[]).
@@ -48,9 +48,7 @@ split_lines([L|Ls],[H|T]) :- split_lines(Ls,T), split_line(L,H).
 start_load_input(Result) :-
 		prompt(_, ''),
 		read_lines(LL),
-		split_lines(LL, Result).%,
-		%write(Result),
-		%halt.
+		split_lines(LL, Result).
 
 
 /** nacte zadany pocet radku */
