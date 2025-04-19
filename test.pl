@@ -33,14 +33,38 @@ noRepeatCombination(NUM, [_|T], RES) :-
 
 /* Hledání cyklů */
 
-dropWithCycle([], []).
+deepSearch(STARTVERTICE, RES) :-
+    (edge(STARTVERTICE, X) ->
+        retract(edge(STARTVERTICE, X)),
+        retract(edge(X, STARTVERTICE)),
+        deepSearch(X, RES)
+    ;
+        !, RES = STARTVERTICE
+    ).
+deepSearch(STARTVERTICE, RES) :-
+    deepSearch(STARTVERTICE, RES).
+ 
+insertEdges([[V1,V2]|T], V1) :-
+    insertEdges([[V1,V2]|T]).
+insertEdges([]).
+insertEdges([[V1,V2]|T]) :-
+    assertz(edge(V1, V2)),
+    assertz(edge(V2, V1)),
+    insertEdges(T).
+
+% Chci aby tento predikát vracel pole potkaných vrcholů, protože ho potom v predikátu nad ním kontroluji se všemi prvky
+deepSearchInit(CANDIDATE, RES) :-
+    insertEdges(CANDIDATE, STARTVERTICE),
+    findall(V, deepSearch(STARTVERTICE, V), RES),
+    retractall(edge(_,_)).
+
+dropWithCycle([], _, []).
 dropWithCycle([H|T], ALLVERTICES, [H|SUBRES]) :-
-    deepSearch(H, FOUNDVERTICES),
-    permutation(ALLVERTICES, FOUNDVERTICES), % kontrola jestli se v hlubokém prohlédávání  našly všechny vrcholy, pokud ano, tak vloží H jako kostru (ve zkratce porovnává pole)
+    deepSearchInit(H, FOUNDVERTICES),
+    subset(ALLVERTICES, FOUNDVERTICES),
     dropWithCycle(T, ALLVERTICES, SUBRES).
 dropWithCycle([_|T], ALLVERTICES, SUBRES) :-
     dropWithCycle(T, ALLVERTICES, SUBRES).
-
 
 /* --------------------------- */
 
@@ -55,5 +79,5 @@ main :-
     getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT),
     findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES),
     dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES),
-    write(CANDIDATES),
+    write(SPANNINGTREES),
     halt.
