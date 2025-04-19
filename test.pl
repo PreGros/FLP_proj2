@@ -61,23 +61,50 @@ deepSearchInit(CANDIDATE, RES) :-
 dropWithCycle([], _, []).
 dropWithCycle([H|T], ALLVERTICES, [H|SUBRES]) :-
     deepSearchInit(H, FOUNDVERTICES),
-    subset(ALLVERTICES, FOUNDVERTICES),
+    subset(ALLVERTICES, FOUNDVERTICES), % TODO: podívat se na subset, pokud vrátím jen 2 vrcholy v FOUNDVERTICES, tak to muze byt subset
     dropWithCycle(T, ALLVERTICES, SUBRES).
 dropWithCycle([_|T], ALLVERTICES, SUBRES) :-
     dropWithCycle(T, ALLVERTICES, SUBRES).
 
 /* --------------------------- */
 
+/* Logika na výpis */
+
+writeST([[V1,V2]]) :-
+    format("~w-~w", [V1, V2]).
+writeST([[V1,V2]|T]) :-
+    format("~w-~w ", [V1, V2]),
+    writeST(T).
+
+writeAllST([]).
+writeAllST([H|T]) :-
+    writeST(H),
+    write("\n"),
+    writeAllST(T).
+
+/* --------------------------- */
+
+/* Kontrola vstupu */
+
+onlyEdges([],[]).
+onlyEdges([[V1,V2]|T], [[V1,V2]|RES]) :-
+    !,
+    onlyEdges(T, RES).
+onlyEdges([_|T], RES) :-
+    onlyEdges(T, RES).
+
+/* --------------------------- */
 
 getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
     length(ALLVERTICES, LEN),
     SPANEDGECOUNT is LEN - 1.
 
 main :-
-    input2:start_load_input(EDGES),
+    input2:start_load_input(CONTENT),
+    onlyEdges(CONTENT, EDGES),
     uniqueArray(EDGES, ALLVERTICES),
     getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT),
     findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES),
     dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES),
-    write(SPANNINGTREES),
+    writeAllST(SPANNINGTREES),
     halt.
