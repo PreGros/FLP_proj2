@@ -53,15 +53,16 @@ def runTest(inputsPath, expectedPath, inputFileName):
         allSpanTreesNotFound = []
         checkIfIn(allSpanTreesResult, allSpanTreesExpected, allSpanTreesNotFound)
 
-        if (allSpanTreesNotFound != []):
-            print("\033[31mUnknown generated spanning trees:\033[0m ")
-            print(allSpanTreesNotFound)
-        if (allSpanTreesExpected != []):
-            print("\033[31mMissing expected spannig trees:\033[0m ")
-            print (allSpanTreesExpected)
-            
         if (allSpanTreesNotFound == [] and allSpanTreesExpected == []):
-            print("\033[32mTest successed!\033[0m")
+            print(f'\033[32m{inputFileName} SUCCESS!\033[0m')
+        else:
+            print(f'\033[31m{inputFileName} FAILED!\033[0m')
+            if (allSpanTreesNotFound != []):
+                print("\033[31mUnknown generated spanning trees:\033[0m")
+                print(allSpanTreesNotFound)
+            if (allSpanTreesExpected != []):
+                print("\033[31mMissing expected spannig trees:\033[0m")
+                print (allSpanTreesExpected)
 
     except FileNotFoundError:
         print("File not found.")
