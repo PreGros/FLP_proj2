@@ -88,7 +88,6 @@ writeAllST([H|T]) :-
 
 onlyEdges([],[]).
 onlyEdges([[V1,V2]|T], [[V1,V2]|RES]) :-
-    !,
     onlyEdges(T, RES).
 onlyEdges([_|T], RES) :-
     onlyEdges(T, RES).
