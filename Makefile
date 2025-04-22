@@ -1,6 +1,7 @@
 SWIPL = swipl
 
 MAIN = flp24-log.pl
+MAIN2 = zkousimUpravit.pl
 
 EXECUTABLE = flp24-log
 
