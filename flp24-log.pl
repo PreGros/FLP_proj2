@@ -1,3 +1,13 @@
+/*
+#########################################
+Logický projekt do předmětu FLP
+Autor: Tomáš Zaviačič
+Login: xzavia00
+Akademický rok: 2024/2025
+Název zadání: Kostra grafu
+########################################
+*/
+
 :- use_module(input2).
 
 /* Kontrola vstupu */

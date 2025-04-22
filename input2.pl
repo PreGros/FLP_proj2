@@ -1,3 +1,13 @@
+/*
+#########################################
+Logický projekt do předmětu FLP
+Autor: Tomáš Zaviačič
+Login: xzavia00
+Akademický rok: 2024/2025
+Název zadání: Kostra grafu
+########################################
+*/
+
 /** FLP 2020
 Toto je ukazkovy soubor zpracovani vstupu v prologu.
 Tento soubor muzete v projektu libovolne pouzit.
@@ -8,10 +18,10 @@ preklad: swipl -q -g start -o flp19-log -c input2.pl
 
 /*
 Dodatek:
-Soubor byl použit pro druhý projekt do FLP: Kostra grafu.
+Soubor byl použit pro logický projekt do FLP: Kostra grafu.
 Soubor jsem podle autora převzal, upravil a smazal nepoužité části.
-Autor FLP projektu: Tomáš Zaviačič (xzavia00).
-*/
+Upravil jsem split_line tak, aby parsoval jednotlivé řádky do [[X,Y,..],..].
+*/	
 
 
 

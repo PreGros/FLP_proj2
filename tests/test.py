@@ -1,3 +1,13 @@
+
+#########################################
+# Logický projekt do předmětu FLP
+# Autor: Tomáš Zaviačič
+# Login: xzavia00
+# Akademický rok: 2024/2025
+# Název zadání: Kostra grafu
+########################################
+
+
 import subprocess
 import os
 import time
@@ -13,9 +23,6 @@ def loadData(loadedData, resultData):
             resultData.append(spanTree) 
 
 def checkIfIn(allSpanTreesResult, allSpantreesExpected, allSpanTreesNotFound):
-    # for treeExpected in allSpantreesExpected:
-    #     treeExpected.sort()
-
     for treeResult in allSpanTreesResult:
         treeResult = [''.join(sorted(elem)) for elem in treeResult]
         treeResult.sort()
