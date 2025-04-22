@@ -106,6 +106,15 @@ deepSearchInit(CANDIDATE, RES) :-
     findall(V, deepSearch(STARTVERTEX, V), RES),
     retractall(edge(_,_)).
 
+%% dropWithCycle(+SpanTreeCandidates, +AllVertices, -SpanTrees) is det.
+%
+% Kontroluje kanditáty na kostru grafu porovnáním vrcholů nalezenými
+% pomocí prohledávání statového prostoru se všemi vrcholy grafu.
+%
+% +SpanTreeCandidates: Jednotlivý kandidáti na kostru grafu
+% +AllVertices: Všechny hrany vstupního grafu
+% -SpanTrees: Výsledné kostry grafu.
+%
 dropWithCycle([], _, []).
 dropWithCycle([H|T], ALLVERTICES, [H|SUBRES]) :-
     deepSearchInit(H, FOUNDVERTICES),
@@ -162,7 +171,7 @@ onlyEdges([_|T], RES) :-
 
 /* --------------------------- */
 
-%% getSpanEdgeCount(+AllVertices, -SpanTreeEdgeCount) is not.
+%% getSpanEdgeCount(+AllVertices, -SpanTreeEdgeCount) is det.
 %
 % Pomocná funkce pro vrácení čísla, které udává jak dlouhá je každá kostra u
 % daného grafu.
@@ -175,11 +184,11 @@ getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
     SPANEDGECOUNT is LEN - 1.
 
 main :-
-    input2:start_load_input(CONTENT), % načtení vstupních hran ve tvaru [[A,B],...]
-    onlyEdges(CONTENT, EDGES), % z načteného vstupu vybrat pouze dvojice symbolů
-    uniqueArray(EDGES, ALLVERTICES), % vybrat všechny unikátní symboly ze vstupu (vrcholy)
-    getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT), % výpočet kolik hran bude mit každá kostra
-    findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES), % vygenerování kombinací bez opak z načtených hran ze vstupu (všechny kandidáty na kostry)
-    dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES), % prozkoumání všech kandidátů na kostru a vyřazení těch, které kostrami nejsou
-    writeAllST(SPANNINGTREES), % výpis nalezených koster podle zadání
+    input2:start_load_input(CONTENT), % Načtení vstupních hran ve tvaru [[A,B],...].
+    onlyEdges(CONTENT, EDGES), % Z načteného vstupu vybrat pouze dvojice vrcholů-
+    uniqueArray(EDGES, ALLVERTICES), % Vybrat všechny unikátní vrcholy ze vstupu.
+    getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT), % Výpočet kolik hran bude mit každá kostra.
+    findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES), % Vygenerování kombinací bez opak z načtených hran ze vstupu (kandidáti na kostry).
+    dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES), % Prozkoumání všech kandidátů na kostru a vyřazení těch, které kostrami nejsou.
+    writeAllST(SPANNINGTREES), % Výpis nalezených koster podle zadání.
     halt.
