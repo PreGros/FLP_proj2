@@ -1,5 +1,22 @@
 :- use_module(input2).
 
+/* Kontrola vstupu */
+
+%% onlyEdges(+InputEdges) is det.
+%
+% Prošetřuje vstupní hrany, jestli se jedná opravdu o
+% dvojice dvou vrcholů.
+%
+% +InputEdges: Načtené hrany ze standardního vstupu.
+%
+onlyEdges([],[]).
+onlyEdges([[V1,V2]|T], [[V1,V2]|RES]) :-
+    onlyEdges(T, RES).
+onlyEdges([_|T], RES) :-
+    onlyEdges(T, RES).
+
+/* --------------------------- */
+
 /* Get unique */
 %% tryPut(+Edge, +FoundUniqueArray, -NewUniqueArray) is det.
 %
@@ -151,23 +168,6 @@ writeAllST([H|T]) :-
     writeST(H),
     write("\n"),
     writeAllST(T).
-
-/* --------------------------- */
-
-/* Kontrola vstupu */
-
-%% onlyEdges(+InputEdges) is det.
-%
-% Prošetřuje vstupní hrany, jestli se jedná opravdu o
-% dvojice dvou vrcholů.
-%
-% +InputEdges: Načtené hrany ze standardního vstupu.
-%
-onlyEdges([],[]).
-onlyEdges([[V1,V2]|T], [[V1,V2]|RES]) :-
-    onlyEdges(T, RES).
-onlyEdges([_|T], RES) :-
-    onlyEdges(T, RES).
 
 /* --------------------------- */
 

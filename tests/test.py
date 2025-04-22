@@ -1,5 +1,6 @@
 import subprocess
 import os
+import time
 
 def loadData(loadedData, resultData):
     lines = loadedData.strip().split("\n")
@@ -29,6 +30,7 @@ def checkIfIn(allSpanTreesResult, allSpantreesExpected, allSpanTreesNotFound):
 
 def runTest(inputsPath, expectedPath, inputFileName):
     try:
+        startTime = time.time()
         with open(f'{inputsPath}{inputFileName}', "r") as file:
             input_data = file.read()
             result = subprocess.run(
@@ -53,10 +55,13 @@ def runTest(inputsPath, expectedPath, inputFileName):
         allSpanTreesNotFound = []
         checkIfIn(allSpanTreesResult, allSpanTreesExpected, allSpanTreesNotFound)
 
+        endTime = time.time()
+        elapsedTime = endTime - startTime
+
         if (allSpanTreesNotFound == [] and allSpanTreesExpected == []):
-            print(f'\033[32m{inputFileName} SUCCESS!\033[0m')
+            print(f'{inputFileName}: \033[32mSUCCESS!\033[0m | Time elapsed: {elapsedTime:.2f}')
         else:
-            print(f'\033[31m{inputFileName} FAILED!\033[0m')
+            print(f'{inputFileName}: \033[31mFAILED!\033[0m')
             if (allSpanTreesNotFound != []):
                 print("\033[31mUnknown generated spanning trees:\033[0m")
                 print(allSpanTreesNotFound)
