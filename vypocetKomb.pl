@@ -75,7 +75,14 @@ noRepeatCombination(NUM, [H|T], [H|RES]) :-
 noRepeatCombination(NUM, [_|T], RES) :-
     noRepeatCombination(NUM, T, RES).
 
-% převzato ze 4. cvičení
+%% factorial(+BaseNumber, +FactorialResult) is det.
+%
+% Převzato ze 4. cvičení z FLP.
+% Vypočítá faktoriál z čísla pomocí rekurze.
+%
+% +BaseNumber: Hodnota, ze které se vypočítá faktoriál
+% +FactorialResult: Výsledek vypočteného faktoriálu.
+%
 factorial(0, 1) :- !.
 factorial(NUM, RES) :-
     NUM > 0,
@@ -83,6 +90,14 @@ factorial(NUM, RES) :-
     factorial(DECNUM, SUBRES),
     RES is SUBRES * NUM.
 
+%% combNoRepeatCount(+EdgeCount, +SpanTreesEdgeCount, -CombinationCount) is det.
+%
+% Výpočet počtu kombinací bez opakování.
+%
+% +EdgeCount: Počet vstupních hran.
+% +SpanTreesEdgeCount: Počet hran v každé kostře.
+% -CombinationCount: Počet kombinací bez opakování, které lze vygenerovat.
+%
 combNoRepeatCount(EDGECOUNT, SPANEDGECOUNT, RES) :-
     factorial(EDGECOUNT, FACTEDGECOUNT),
     factorial(SPANEDGECOUNT, FACTSPANEDGECOUNT),
@@ -90,7 +105,16 @@ combNoRepeatCount(EDGECOUNT, SPANEDGECOUNT, RES) :-
     factorial(DIFF, FACTDIFF),
     RES is FACTEDGECOUNT / (FACTSPANEDGECOUNT*FACTDIFF).
 
-getNumCombinations(SPANEDGECOUNT, EDGES, RES) :-
+%% getNumCandidates(+SpanTreesEdgeCount, +Edges, -FoundCandidates) is det.
+%
+% Vrací všechny kandidáty na kostru grafu.
+% Vypočítá kolik kandidátů lze vygenerovat a pouze tolik jich vygeneruje.
+%
+% +SpanTreesEdgeCount: Počet hran v každé kostře.
+% +Edges: Vstupní hrany.
+% -FoundCandidates: Nalezení kandidáti na kostru grafu.
+%
+getNumCandidates(SPANEDGECOUNT, EDGES, RES) :-
     length(EDGES, EDGECOUNT),
     combNoRepeatCount(EDGECOUNT, SPANEDGECOUNT, COMBCOUNT),
     findnsols(COMBCOUNT, X, noRepeatCombination(SPANEDGECOUNT, EDGES, X), RES), !.
@@ -193,19 +217,28 @@ writeAllST([H|T]) :-
     writeAllST(T).
 /* --------------------------- */
 
-%% getSpanEdgeCount(+AllVertices, -SpanTreeEdgeCount) is det.
+%% getSpanEdgeCount(+AllVertices, -SpanTreesEdgeCount) is det.
 %
 % Pomocná funkce pro vrácení čísla, které udává jak dlouhá je každá kostra u
 % daného grafu.
 %
 % +AllVertices: Všechny vrcholy daného grafu.
-% -SpanTreeEdgeCount: Počet hran u každé kostry daného grafu.
+% -SpanTreesEdgeCount: Počet hran u každé kostry daného grafu.
 %
 getSpanEdgeCount([], 0).
 getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
     length(ALLVERTICES, LEN),
     SPANEDGECOUNT is LEN - 1.
 
+%% checkIfConnected(+Edges, +AllVertices) is semidet.
+%
+% Zkontroluje souvislost grafu pomocí hlubokého prohledávání stavového prostoru.
+% Pokud při prohledávání nenašel všechny vrcholy, tak se nejedná o souvislý graf a
+% na výstup se nic nevypíše.
+%
+% +Edge: Načtené hrany z vstupu.
+% +AllVertices: Všechny vrcholy ze vstupního grafu.
+%
 checkIfConnected([], []).
 checkIfConnected(EDGES, ALLVERTICES) :-
     deepSearchInit(EDGES, FOUNDVERTICES),
@@ -217,10 +250,9 @@ main :-
     input2:start_load_input(CONTENT), % Načtení vstupních hran ve tvaru [[A,B],...].
     onlyEdges(CONTENT, EDGES), % Z načteného vstupu vybrat pouze dvojice vrcholů.
     uniqueArray(EDGES, ALLVERTICES), % Vybrat všechny unikátní vrcholy ze vstupu.
-    checkIfConnected(EDGES, ALLVERTICES),
+    checkIfConnected(EDGES, ALLVERTICES), % Pomocí hlubokého prohledání zjistit, jestli vstupní graf je souvislý.
     getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT), % Výpočet kolik hran bude mit každá kostra.
-    %findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES), % Vygenerování kombinací bez opak z načtených hran ze vstupu (kandidáti na kostry).
-    getNumCombinations(SPANEDGECOUNT, EDGES, CANDIDATES),
+    getNumCandidates(SPANEDGECOUNT, EDGES, CANDIDATES), % Získání všech kandidátů na kostry grafu.
     dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES), % Prozkoumání všech kandidátů na kostru a vyřazení těch, které kostrami nejsou.
     writeAllST(SPANNINGTREES), % Výpis nalezených koster podle zadání.
     halt.
