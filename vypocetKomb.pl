@@ -57,6 +57,24 @@ uniqueArray([H|T], RES) :-
     tryPut(H, RECRES, RES).
 /* --------------------------- */
 
+/* Kontrola souvislosti vstupního grafu */
+%% checkIfConnected(+Edges, +AllVertices) is semidet.
+%
+% Zkontroluje souvislost grafu pomocí hlubokého prohledávání stavového prostoru.
+% Pokud při prohledávání nenašel všechny vrcholy, tak se nejedná o souvislý graf a
+% na výstup se nic nevypíše.
+%
+% +Edge: Načtené hrany z vstupu.
+% +AllVertices: Všechny vrcholy ze vstupního grafu.
+%
+checkIfConnected([], []).
+checkIfConnected(EDGES, ALLVERTICES) :-
+    deepSearchInit(EDGES, FOUNDVERTICES),
+    subset(ALLVERTICES, FOUNDVERTICES), !.
+checkIfConnected(_, _) :-
+    halt.
+/* --------------------------- */
+
 /* Lepší způsob generování kombinací o určité velikosti */
 %% noRepeatCombination(+N, +InputList, -Candidates) is nondet.
 %
@@ -230,21 +248,7 @@ getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
     length(ALLVERTICES, LEN),
     SPANEDGECOUNT is LEN - 1.
 
-%% checkIfConnected(+Edges, +AllVertices) is semidet.
-%
-% Zkontroluje souvislost grafu pomocí hlubokého prohledávání stavového prostoru.
-% Pokud při prohledávání nenašel všechny vrcholy, tak se nejedná o souvislý graf a
-% na výstup se nic nevypíše.
-%
-% +Edge: Načtené hrany z vstupu.
-% +AllVertices: Všechny vrcholy ze vstupního grafu.
-%
-checkIfConnected([], []).
-checkIfConnected(EDGES, ALLVERTICES) :-
-    deepSearchInit(EDGES, FOUNDVERTICES),
-    subset(ALLVERTICES, FOUNDVERTICES), !.
-checkIfConnected(_, _) :-
-    halt.
+
 
 main :-
     input2:start_load_input(CONTENT), % Načtení vstupních hran ve tvaru [[A,B],...].
