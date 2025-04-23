@@ -69,7 +69,10 @@ A-D B-C C-D
 
 ### Testing
 
-Vytvořené testy lze najít ve složce `tests`, kde je napsaný skript v jazyce **Python**. Skript spouští zkompilovaný program a testuje ho na vstupech ze složky `tests/inputs`. Výsledky porovná s očekávanými výstupy ze složky `tests/expected`. Očekávané výsledky by neměly mít přehozené vrcholy u hran, než je tomu u vstupních dat (např. vstupní hrana A B, očekávaný formát B-A). Jinak test s přehozením koster a hran počítá. Testy se spouští:
+Vytvořené testy lze najít ve složce `tests`, kde je napsaný skript v jazyce **Python**. Skript spouští zkompilovaný program a testuje ho na vstupech ze složky `tests/inputs`. Výsledky porovná s očekávanými výstupy ze složky `tests/expected`. Očekávané výsledky by neměly mít přehozené vrcholy u hran, než je tomu u vstupních dat (např. vstupní hrana A B, očekávaný formát B-A). Jinak test s přehozením koster a hran počítá. Testy lze spustit ve složce `tests`:
+```
+cd tests
+```
 ```
 python3.8 test.py
 ```
@@ -90,4 +93,55 @@ test-12: SUCCESS! | Time elapsed: 0.07
 test-13: SUCCESS! | Time elapsed: 0.05
 test-14: SUCCESS! | Time elapsed: 0.05
 test-15: SUCCESS! | Time elapsed: 0.05
+```
+## Hiearchie projektu
+```
+├── Makefile
+├── README.md
+├── input2.pl
+├── inputs
+│   ├── pr1.txt
+│   ├── pr2.txt
+│   ├── pr3.txt
+│   ├── pr4.txt
+│   ├── pr5.txt
+│   ├── pr6.txt
+│   ├── pr7.txt
+│   └── pr8.txt
+├── spanningTrees.pl
+└── tests
+    ├── expected
+    │   ├── test-01
+    │   ├── test-02
+    │   ├── test-03
+    │   ├── test-04
+    │   ├── test-05
+    │   ├── test-06
+    │   ├── test-07
+    │   ├── test-08
+    │   ├── test-09
+    │   ├── test-10
+    │   ├── test-11
+    │   ├── test-12
+    │   ├── test-13
+    │   ├── test-14
+    │   └── test-15
+    ├── inputs
+    │   ├── test-01
+    │   ├── test-02
+    │   ├── test-03
+    │   ├── test-04
+    │   ├── test-05
+    │   ├── test-06
+    │   ├── test-07
+    │   ├── test-08
+    │   ├── test-09
+    │   ├── test-10
+    │   ├── test-11
+    │   ├── test-12
+    │   ├── test-13
+    │   ├── test-14
+    │   └── test-15
+    └── test.py
+
 ```
