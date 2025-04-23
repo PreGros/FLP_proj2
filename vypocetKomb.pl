@@ -25,35 +25,35 @@ onlyEdges([_|T], RES) :-
     onlyEdges(T, RES).
 /* --------------------------- */
 
-/* Get unique */
-%% tryPut(+Edge, +FoundUniqueArray, -NewUniqueArray) is det.
+/* Získej pole unikátních vrcholů */
+%% tryPut(+Edge, +FoundUniqueList, -NewUniqueList) is det.
 %
 % Pomáhá pří vytváření pole unikátních vrcholů, zjistí zda-li prvky v poli
 % jsou již v poli unikátních vrcholů a podle toho vloží nebo vynechá.
 %
 % +Edge: Hrana spojující vrcholy, které se vyzkouší vložit do pole unikátních vrcholů.
-% +FoundUniqueArray: Dosavadní nalezené unikátní vrcholy.
-% -NewUniqueArray: Výstupní pole unikátních vrcholů.
+% +FoundUniqueList: Dosavadní nalezené unikátní vrcholy.
+% -NewUniqueList: Výstupní pole unikátních vrcholů.
 %
 tryPut([], RECRES, RECRES).
 tryPut([H|T],RECRES, RES) :-
     tryPut(T, RECRES, SUBRES),
-    (memberchk(H,SUBRES) -> % předělat tento if spíš na prolog-like syntaxi (myšleno přidat misto toho třetí volání tryPut podobně jak noRepeatCombination)
+    (memberchk(H,SUBRES) ->
         RES = SUBRES
     ;
         RES = [H|SUBRES]
     ).
 
-%% uniqueArray(+Edges, -UniqueArray) is det.
+%% uniqueList(+Edges, -UniqueList) is det.
 %
 % Vytváří pole unikátních vrcholů ze zadaného pole polí.
 %
 % +Edges: Vstupní pole hran, ze kterých se získávají vrcholy hran. 
-% -UniqueArray: Pole nalezených unikátních vrcholů.
+% -UniqueList: Pole nalezených unikátních vrcholů.
 %
-uniqueArray([], []).
-uniqueArray([H|T], RES) :-
-    uniqueArray(T, RECRES),
+uniqueList([], []).
+uniqueList([H|T], RES) :-
+    uniqueList(T, RECRES),
     tryPut(H, RECRES, RES).
 /* --------------------------- */
 
@@ -75,7 +75,7 @@ checkIfConnected(_, _) :-
     halt.
 /* --------------------------- */
 
-/* Lepší způsob generování kombinací o určité velikosti */
+/* Generování kombinací o určité velikosti */
 %% noRepeatCombination(+N, +InputList, -Candidates) is nondet.
 %
 % Vygeneruje kombinaci N prvků z InputList bez opakování pomocí
@@ -138,7 +138,7 @@ getNumCandidates(SPANEDGECOUNT, EDGES, RES) :-
     findnsols(COMBCOUNT, X, noRepeatCombination(SPANEDGECOUNT, EDGES, X), RES), !.
 /* --------------------------- */
 
-/* Hledání cyklů */
+/* Hledání cyklů v grafu */
 %% deepSearch(+StartVertex, -FoundVertex) is nondet.
 %
 % Prohledává stavový prostor stylem hlubokého prohlédávání.
@@ -253,7 +253,7 @@ getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
 main :-
     input2:start_load_input(CONTENT), % Načtení vstupních hran ve tvaru [[A,B],...].
     onlyEdges(CONTENT, EDGES), % Z načteného vstupu vybrat pouze dvojice vrcholů.
-    uniqueArray(EDGES, ALLVERTICES), % Vybrat všechny unikátní vrcholy ze vstupu.
+    uniqueList(EDGES, ALLVERTICES), % Vybrat všechny unikátní vrcholy ze vstupu.
     checkIfConnected(EDGES, ALLVERTICES), % Pomocí hlubokého prohledání zjistit, jestli vstupní graf je souvislý.
     getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT), % Výpočet kolik hran bude mit každá kostra.
     getNumCandidates(SPANEDGECOUNT, EDGES, CANDIDATES), % Získání všech kandidátů na kostry grafu.
