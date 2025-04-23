@@ -74,6 +74,26 @@ noRepeatCombination(NUM, [H|T], [H|RES]) :-
     noRepeatCombination(DECNUM, T, RES).
 noRepeatCombination(NUM, [_|T], RES) :-
     noRepeatCombination(NUM, T, RES).
+
+% převzato ze 4. cvičení
+factorial(0, 1) :- !.
+factorial(NUM, RES) :-
+    NUM > 0,
+    DECNUM is NUM - 1,
+    factorial(DECNUM, SUBRES),
+    RES is SUBRES * NUM.
+
+combNoRepeatCount(EDGECOUNT, SPANEDGECOUNT, RES) :-
+    factorial(EDGECOUNT, FACTEDGECOUNT),
+    factorial(SPANEDGECOUNT, FACTSPANEDGECOUNT),
+    DIFF is EDGECOUNT - SPANEDGECOUNT,
+    factorial(DIFF, FACTDIFF),
+    RES is FACTEDGECOUNT / (FACTSPANEDGECOUNT*FACTDIFF).
+
+getNumCombinations(SPANEDGECOUNT, EDGES, RES) :-
+    length(EDGES, EDGECOUNT),
+    combNoRepeatCount(EDGECOUNT, SPANEDGECOUNT, COMBCOUNT),
+    findnsols(COMBCOUNT, X, noRepeatCombination(SPANEDGECOUNT, EDGES, X), RES), !.
 /* --------------------------- */
 
 /* Hledání cyklů */
@@ -181,16 +201,26 @@ writeAllST([H|T]) :-
 % +AllVertices: Všechny vrcholy daného grafu.
 % -SpanTreeEdgeCount: Počet hran u každé kostry daného grafu.
 %
+getSpanEdgeCount([], 0).
 getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT) :-
     length(ALLVERTICES, LEN),
     SPANEDGECOUNT is LEN - 1.
 
+checkIfConnected([], []).
+checkIfConnected(EDGES, ALLVERTICES) :-
+    deepSearchInit(EDGES, FOUNDVERTICES),
+    subset(ALLVERTICES, FOUNDVERTICES), !.
+checkIfConnected(_, _) :-
+    halt.
+
 main :-
     input2:start_load_input(CONTENT), % Načtení vstupních hran ve tvaru [[A,B],...].
-    onlyEdges(CONTENT, EDGES), % Z načteného vstupu vybrat pouze dvojice vrcholů-
+    onlyEdges(CONTENT, EDGES), % Z načteného vstupu vybrat pouze dvojice vrcholů.
     uniqueArray(EDGES, ALLVERTICES), % Vybrat všechny unikátní vrcholy ze vstupu.
+    checkIfConnected(EDGES, ALLVERTICES),
     getSpanEdgeCount(ALLVERTICES, SPANEDGECOUNT), % Výpočet kolik hran bude mit každá kostra.
-    findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES), % Vygenerování kombinací bez opak z načtených hran ze vstupu (kandidáti na kostry).
+    %findall(K, noRepeatCombination(SPANEDGECOUNT, EDGES, K), CANDIDATES), % Vygenerování kombinací bez opak z načtených hran ze vstupu (kandidáti na kostry).
+    getNumCombinations(SPANEDGECOUNT, EDGES, CANDIDATES),
     dropWithCycle(CANDIDATES, ALLVERTICES, SPANNINGTREES), % Prozkoumání všech kandidátů na kostru a vyřazení těch, které kostrami nejsou.
     writeAllST(SPANNINGTREES), % Výpis nalezených koster podle zadání.
     halt.
