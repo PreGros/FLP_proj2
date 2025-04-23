@@ -33,8 +33,8 @@ Poslední částí programu je výpis nalezených koster grafu na standardní v�
 
 ## Požadavky
 
-- **SWI-Prolog (threaded, 64 bits, version 9.2.9)**
-- **Python 3.8.20+**
+- **SWI-Prolog (threaded, 64 bits, version 9.2.9)**: Spuštění projektu.
+- **Python 3.8.20+**: Pouze pro testování.
 
 ## Spouštění
 
@@ -50,16 +50,44 @@ Vytvořený spustitelný soubor je pojmenovaný `flp24-log`.
 
 ### Spouštění projektu
 
-Po zkompilování programu stačí spustitelný spustit s přiloženými vstupy ve složce `inputs` například:
+Po zkompilování programu stačí vytvořený soubor spustit s přiloženými vstupy ze složky `inputs` pomocí přesměrování vstupu:
 
 ```
 ./flp24-log < inputs/pr1.txt
 ```
+Očekávaný výstup:
+```
+A-B A-C A-D
+A-B A-C C-D
+A-B A-D B-C
+A-B A-D C-D
+A-B B-C C-D
+A-C A-D B-C
+A-C B-C C-D
+A-D B-C C-D
+```
 
 ### Testing
 
-### Cleaning up
-
-## Input format
-
-## Output format
+Vytvořené testy lze najít ve složce `tests`, kde je napsaný skript v jazyce **Python**. Skript spouští zkompilovaný program a testuje ho na vstupech ze složky `tests/inputs`. Výsledky porovná s očekávanými výstupy ze složky `tests/expected`. Očekávané výsledky by neměly mít přehozené vrcholy u hran, než je tomu u vstupních dat (např. vstupní hrana A B, očekávaný formát B-A). Testy se spouští:
+```
+python3.8 test.py
+```
+Očekávaný výstup z testů:
+```
+test-01: SUCCESS! | Time elapsed: 0.05
+test-02: SUCCESS! | Time elapsed: 0.05
+test-03: SUCCESS! | Time elapsed: 0.05
+test-04: SUCCESS! | Time elapsed: 0.05
+test-05: SUCCESS! | Time elapsed: 0.05
+test-06: SUCCESS! | Time elapsed: 0.05
+test-07: SUCCESS! | Time elapsed: 0.05
+test-08: SUCCESS! | Time elapsed: 0.05
+test-09: SUCCESS! | Time elapsed: 0.05
+test-10: SUCCESS! | Time elapsed: 0.05
+test-11: SUCCESS! | Time elapsed: 0.05
+test-12: SUCCESS! | Time elapsed: 0.07
+test-13: SUCCESS! | Time elapsed: 0.05
+test-14: SUCCESS! | Time elapsed: 0.05
+test-15: SUCCESS! | Time elapsed: 0.05
+```
